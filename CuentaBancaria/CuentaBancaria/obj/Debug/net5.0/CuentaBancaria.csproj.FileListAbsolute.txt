@@ -1,0 +1,16 @@
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.AssemblyInfoInputs.cache
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.AssemblyInfo.cs
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.csproj.CoreCompileInputs.cache
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.sourcelink.json
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.exe
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.deps.json
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.runtimeconfig.json
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.runtimeconfig.dev.json
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.dll
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\bin\Debug\net5.0\CuentaBancaria.pdb
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.dll
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\refint\CuentaBancaria.dll
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.pdb
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\CuentaBancaria.genruntimeconfig.cache
+C:\Users\usuario\source\repos\EjerciciosCSharp\CuentaBancaria\CuentaBancaria\obj\Debug\net5.0\ref\CuentaBancaria.dll
