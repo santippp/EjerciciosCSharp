@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 public interface IVehiculo
 {
@@ -98,5 +98,17 @@ public class Auto : IVehiculo
     public void ReiniciarPosicion()
     {
         Posicion = 0;
+    }
+}
+
+public class Carrera
+{
+    public void IniciarCarrera(IVehiculo v1, IVehiculo v2, int minutos)
+    {
+        v1.Mover(minutos);
+        v2.Mover(minutos);
+
+        Console.WriteLine($"Vehículo 1 terminó en la posición: {v1.Posicion}");
+        Console.WriteLine($"Vehículo 2 terminó en la posición: {v2.Posicion}");
     }
 }
