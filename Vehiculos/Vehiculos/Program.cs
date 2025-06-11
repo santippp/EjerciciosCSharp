@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Vehiculos
 {
@@ -19,6 +19,10 @@ namespace Vehiculos
 
             hondaFit.Mover(30);
             Console.WriteLine($"El Honda Fit se movio {hondaFit.DarPosicion()} metros");
+
+            // Creamos una carrera
+            Carrera carrera = new Carrera();
+            carrera.IniciarCarrera(bici, hondaFit, 40);
         }
     }
 }
