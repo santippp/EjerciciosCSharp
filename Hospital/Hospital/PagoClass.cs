@@ -24,16 +24,22 @@ class Pago
         Fecha = fecha;
         Descripcion = descripcion;
         NombrePaciente = paciente.Nombre;
-        ApellidoPaciente= paciente.Apellido;
+        ApellidoPaciente = paciente.Apellido;
         NombreMedico = medico.Nombre;
         Matricula = medico.Matricula;
 
         if (paciente.ObraSocial != null)
+        {
             ObraSocial = paciente.ObraSocial.Nombre;
-        else
-            ObraSocial = "-";
+            Importe = interv.Intervencion.CostoAPagar() * (1 - (int)paciente.ObraSocial.PorcentajeCobertura);
 
-        Importe = interv.Intervencion.CostoAPagar();
+        }
+        else
+        {
+            ObraSocial = "-";
+            Importe = interv.Intervencion.CostoAPagar();
+        }
+
     }
 
     public void ImprimirPago()

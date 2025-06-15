@@ -4,39 +4,28 @@ using System.Collections.Generic;
 
 class Program
 {
-    //Lista de pacientes
-    static List<Paciente> pacientes = new List<Paciente>();
+
     //Listamos los pagos pendientes
     static List<Pago> pagosPendientes = new List<Pago>();
 
     static void Main()
     {
-        //Creamos obraSocial
-        ObraSocial Avalian = new ObraSocial("Avalian", 0.20);
 
-        // Creamos paciente
-        Paciente p1 = new Paciente(12345678, "Santiago", "Pricco", "3415551234", Avalian);
-        pacientes.Add(p1);
-
-        // Creamos 2 médicos
-        Medico medicoIncorrecto = new Medico("Laura", "Lopez", "1234", "Cardiología", true);
-        Medico medicoCorrecto = new Medico("Pedro", "Gomez", "5678", "Cirugía General", true);
-
-        // Crear intervención de alta complejidad
-        IntervencionQuirurgica intervencion = new AltaComplejidad(1001, "Apendicectomía", "Cirugía General", 10000);
+        Hospital hospital = new Hospital(); 
 
         // Intentamos con medico incorrecto
         Console.WriteLine("\nProbamos con medico incorrecto.");
-        IntervencionRealizada  i1 = CrearIntervencion(DateTime.Now, intervencion, medicoIncorrecto, p1);
+        //Medico de Cardiologia para Traumatologia
+        IntervencionRealizada  i1 = CrearIntervencion(DateTime.Now, hospital.Intervenciones[1], hospital.Medicos[0], hospital.Pacientes[0]);
 
         // Probar con otro Paciente
         Console.Write("\nIngrese DNI del paciente para otra intervencion: ");
         int dni = int.Parse(Console.ReadLine());
-        Paciente paciente = BuscarOPedirPaciente(dni);
+        Paciente paciente = BuscarOPedirPaciente(hospital, dni);
 
         // Probamos con Paciente dado
         Console.WriteLine("Probamos con otro paciente");
-        IntervencionRealizada i2 = CrearIntervencion(DateTime.Now, intervencion, medicoCorrecto, paciente);
+        IntervencionRealizada i2 = CrearIntervencion(DateTime.Now, hospital.Intervenciones[0], hospital.Medicos[0], paciente);
 
         MostrarPagosPendientes();
 
@@ -47,12 +36,12 @@ class Program
 
         MostrarPagosPendientes();
 
-        }
+    }
 
     //Fucnion que busca el paciente o lo crea si no existe
-    static Paciente BuscarOPedirPaciente(int dni)
+    static Paciente BuscarOPedirPaciente(Hospital hospital, int dni)
     {
-        var paciente = pacientes.Find(p => p.DNI == dni);
+        var paciente = hospital.Pacientes.Find(p => p.DNI == dni);
         if (paciente != null)
         {
             Console.WriteLine("Paciente encontrado.");
@@ -70,7 +59,7 @@ class Program
         string telefono = Console.ReadLine();
 
         paciente = new Paciente(dni, nombre, apellido, telefono, null);
-        pacientes.Add(paciente);
+        hospital.AgregarPaciente(paciente);
         Console.WriteLine("Paciente registrado exitosamente.");
         return paciente;
     }
@@ -100,7 +89,7 @@ class Program
 
     static void MostrarPagosPendientes()
     {
-        Console.WriteLine("\nPagos pendientes de liquidación:");
+        Console.WriteLine("\nPagos pendientes de liquidación:\n");
         foreach (var pago in pagosPendientes)
         {
             pago.ImprimirPago();
