@@ -23,6 +23,9 @@ namespace Vehiculos
             // Creamos una carrera
             Carrera carrera = new Carrera();
             carrera.IniciarCarrera(bici, hondaFit, 40);
+
+            Console.ReadLine();
+
         }
     }
 }
