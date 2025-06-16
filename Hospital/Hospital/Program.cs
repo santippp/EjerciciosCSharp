@@ -1,101 +1,203 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 class Program
 {
-
-    //Listamos los pagos pendientes
     static List<Pago> pagosPendientes = new List<Pago>();
+    static Hospital hospital = new Hospital();
 
     static void Main()
     {
+        bool salir = false;
+        while (!salir)
+        {
+            Console.WriteLine("\n--- MENÚ PRINCIPAL ---");
+            Console.WriteLine("1. Agregar nuevo paciente");
+            Console.WriteLine("2. Listar todos los pacientes");
+            Console.WriteLine("3. Asignar intervención a paciente");
+            Console.WriteLine("4. Calcular costo de intervenciones por DNI");
+            Console.WriteLine("5. Reporte de pagos pendientes");
+            Console.WriteLine("6. Pagar intervención");
+            Console.WriteLine("7. Salir");
+            Console.Write("Seleccione opción: ");
 
-        Hospital hospital = new Hospital(); 
-
-        // Intentamos con medico incorrecto
-        Console.WriteLine("\nProbamos con medico incorrecto.");
-        //Medico de Cardiologia para Traumatologia
-        IntervencionRealizada  i1 = CrearIntervencion(DateTime.Now, hospital.Intervenciones[1], hospital.Medicos[0], hospital.Pacientes[0]);
-
-        // Probar con otro Paciente
-        Console.Write("\nIngrese DNI del paciente para otra intervencion: ");
-        int dni = int.Parse(Console.ReadLine());
-        Paciente paciente = BuscarOPedirPaciente(hospital, dni);
-
-        // Probamos con Paciente dado
-        Console.WriteLine("Probamos con otro paciente");
-        IntervencionRealizada i2 = CrearIntervencion(DateTime.Now, hospital.Intervenciones[0], hospital.Medicos[0], paciente);
-
-        MostrarPagosPendientes();
-
-        //Deseamos Pagar el ticket
-        Console.WriteLine("Pagamos la IntervQuirugica");
-        i2.Pagar();
-        pagosPendientes.RemoveAt(pagosPendientes.Count - 1);
-
-        MostrarPagosPendientes();
-
+            switch (Console.ReadLine())
+            {
+                case "1": AgregarPacienteMenu(); break;
+                case "2": ListarPacientes(); break;
+                case "3": AsignarIntervencion(); break;
+                case "4": CalcularCostosPorDNI(); break;
+                case "5": MostrarPagosPendientes(); break;
+                case "6": PagarIntervencion(); break;
+                case "7": salir = true; break;
+                default: Console.WriteLine("Opción invalida"); break;
+            }
+        }
     }
 
-    //Fucnion que busca el paciente o lo crea si no existe
-    static Paciente BuscarOPedirPaciente(Hospital hospital, int dni)
+    static void AgregarPacienteMenu()
     {
-        var paciente = hospital.Pacientes.Find(p => p.DNI == dni);
-        if (paciente != null)
+        Console.Write("DNI: ");
+        int dni = int.Parse(Console.ReadLine());
+        AgregarPaciente(dni);
+    }
+
+    static void AgregarPaciente(int dni)
+    {
+        // Verificar si el paciente ya existe
+        if (hospital.BuscarPaciente(dni) != null)
         {
-            Console.WriteLine("Paciente encontrado.");
-            return paciente;
+            Console.WriteLine("Paciente ya existe");
+            return;
         }
 
-        Console.WriteLine("Paciente no encontrado. Vamos a darlo de alta.");
         Console.Write("Nombre: ");
         string nombre = Console.ReadLine();
-
         Console.Write("Apellido: ");
         string apellido = Console.ReadLine();
-
         Console.Write("Teléfono: ");
         string telefono = Console.ReadLine();
 
-        paciente = new Paciente(dni, nombre, apellido, telefono, null);
-        hospital.AgregarPaciente(paciente);
-        Console.WriteLine("Paciente registrado exitosamente.");
-        return paciente;
+        Console.Write("¿Tiene obra social? (s/n): ");
+        if (Console.ReadLine().ToLower() == "s")
+        {
+            Console.WriteLine("Obras sociales disponibles:");
+            for (int i = 0; i < hospital.ObrasSociales.Count; i++)
+                Console.WriteLine($"{i + 1}. {hospital.ObrasSociales[i].Nombre}");
+
+            Console.Write("Seleccione obra social: ");
+            int index = int.Parse(Console.ReadLine()) - 1;
+            hospital.AgregarPaciente(new Paciente(dni, nombre, apellido, telefono, hospital.ObrasSociales[index]));
+        }
+        else
+        {
+            hospital.AgregarPaciente(new Paciente(dni, nombre, apellido, telefono));
+        }
+        Console.WriteLine("Paciente agregado exitosamente");
     }
 
-    static IntervencionRealizada CrearIntervencion(DateTime fecha, IntervencionQuirurgica interv, Medico medico, Paciente paciente)
+    static void ListarPacientes()
     {
+        Console.WriteLine("\nLISTA DE PACIENTES");
+        foreach (var p in hospital.Pacientes)
+        {
+            Console.WriteLine($"{p.DNI}: {p.Nombre} {p.Apellido} - Tel: {p.Telefono} - OS: {(p.ObraSocial?.Nombre ?? "Ninguna")}");
+        }
+    }
+
+    static void AsignarIntervencion()
+    {
+        Console.Write("DNI del paciente: ");
+        int dni = int.Parse(Console.ReadLine());
+
+        // Buscar paciente existente
+        Paciente paciente = hospital.BuscarPaciente(dni);
+
+        // Si no existe, llamar a AgregarPaciente
+        if (paciente == null)
+        {
+            Console.WriteLine("El paciente no existe, vamos a registrarlo");
+            AgregarPaciente(dni);  // Pasamos el DNI para evitar pedirlo denuevo
+            paciente = hospital.BuscarPaciente(dni);  // Agarramos el paciente creado
+        }
+
+        // Continuamos con el proceso
+        Console.WriteLine("\nINTERVENCIONES DISPONIBLES");
+        for (int i = 0; i < hospital.Intervenciones.Count; i++)
+            Console.WriteLine($"{i + 1}. {hospital.Intervenciones[i].Descripcion} ({hospital.Intervenciones[i].Especialidad})");
+
+        Console.Write("Seleccione intervencion: ");
+        int indexInterv = int.Parse(Console.ReadLine()) - 1;
+        var intervencion = hospital.Intervenciones[indexInterv];
+
+        var medicosDisponibles = hospital.Medicos
+            .Where(m => m.Especialidad == intervencion.Especialidad && m.Condicion)
+            .ToList();
+
+        if (medicosDisponibles.Count == 0)
+        {
+            Console.WriteLine("No hay medicos disponibles para esta intervencion");
+            return;
+        }
+
+        Console.WriteLine("\nMÉDICOS DISPONIBLES");
+        for (int i = 0; i < medicosDisponibles.Count; i++)
+            Console.WriteLine($"{i + 1}. {medicosDisponibles[i].Nombre} {medicosDisponibles[i].Apellido}");
+
+        Console.Write("Seleccione medico: ");
+        int indexMedico = int.Parse(Console.ReadLine()) - 1;
+
         try
         {
-            IntervencionRealizada intervRealizada = new IntervencionRealizada(fecha, interv, medico, paciente);
+            var intervRealizada = new IntervencionRealizada(
+                DateTime.Now,
+                intervencion,
+                medicosDisponibles[indexMedico],
+                paciente
+            );
 
-            // Creamos el pago
-            Pago pago = new Pago(fecha, interv.ObtenerDescripcion(), paciente, medico, intervRealizada);
+            var pago = new Pago(
+                DateTime.Now,
+                intervencion.Descripcion,
+                paciente,
+                medicosDisponibles[indexMedico],
+                intervRealizada
+            );
 
             pagosPendientes.Add(pago);
-
-            Console.WriteLine("\nIntervención registrada con éxito. Comprobante:");
+            Console.WriteLine("\nIntervencion asignada exitosamente. Comprobante:");
             pago.ImprimirPago();
-
-            return intervRealizada;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return null;
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    static void CalcularCostosPorDNI()
+    {
+        Console.Write("DNI del paciente: ");
+        int dni = int.Parse(Console.ReadLine());
+        var paciente = hospital.BuscarPaciente(dni);
+
+        if (paciente == null)
+        {
+            Console.WriteLine("Paciente no encontrado");
+            return;
+        }
+
+        Console.WriteLine($"Costo total: {paciente.CalcularCostoTotal():C}");
+        Console.WriteLine($"Costo pendiente: {paciente.CalcularCostoPendiente():C}");
     }
 
     static void MostrarPagosPendientes()
     {
-        Console.WriteLine("\nPagos pendientes de liquidación:\n");
+        Console.WriteLine("\nPAGOS PENDIENTES");
         foreach (var pago in pagosPendientes)
         {
             pago.ImprimirPago();
         }
     }
 
+    static void PagarIntervencion()
+    {
+        if (pagosPendientes.Count == 0)
+        {
+            Console.WriteLine("No hay pagos pendientes");
+            return;
+        }
+
+        Console.WriteLine("Seleccione pago a liquidar:");
+        for (int i = 0; i < pagosPendientes.Count; i++)
+            Console.WriteLine($"{i + 1}. {pagosPendientes[i].Descripcion} - {pagosPendientes[i].NombrePaciente}");
+
+        Console.Write("Seleccione: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+
+        pagosPendientes[index].IntervencionRealizada.Pagar();
+        pagosPendientes.RemoveAt(index);
+        Console.WriteLine("Pago realizado exitosamente");
+    }
 
 }
-

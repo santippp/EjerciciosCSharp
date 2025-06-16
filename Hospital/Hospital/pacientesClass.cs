@@ -40,4 +40,35 @@ public class Paciente
     {
         IntervencionesRealizadas.Add(interv);
     }
+
+    public decimal CalcularCostoTotal()
+    {
+        decimal total = 0;
+        foreach (var interv in IntervencionesRealizadas)
+        {
+            decimal costoBase = interv.Intervencion.CostoAPagar();
+            if (ObraSocial != null)
+                total += costoBase * (1 - (decimal)ObraSocial.PorcentajeCobertura);
+            else
+                total += costoBase;
+        }
+        return total;
+    }
+
+    public decimal CalcularCostoPendiente()
+    {
+        decimal total = 0;
+        foreach (var interv in IntervencionesRealizadas)
+        {
+            if (!interv.Pagado)
+            {
+                decimal costoBase = interv.Intervencion.CostoAPagar();
+                if (ObraSocial != null)
+                    total += costoBase * (1 - (decimal)ObraSocial.PorcentajeCobertura);
+                else
+                    total += costoBase;
+            }
+        }
+        return total;
+    }
 }

@@ -15,6 +15,7 @@ class Pago
     public string Matricula;
     public string ObraSocial;
     public decimal Importe;
+    public IntervencionRealizada IntervencionRealizada { get; }
     //Guardamos nombre de ObraSocial
 
 
@@ -31,15 +32,14 @@ class Pago
         if (paciente.ObraSocial != null)
         {
             ObraSocial = paciente.ObraSocial.Nombre;
-            Importe = interv.Intervencion.CostoAPagar() * (1 - (int)paciente.ObraSocial.PorcentajeCobertura);
-
+            Importe = interv.Intervencion.CostoAPagar() * (1 - (decimal)paciente.ObraSocial.PorcentajeCobertura);
         }
         else
         {
             ObraSocial = "-";
             Importe = interv.Intervencion.CostoAPagar();
         }
-
+        IntervencionRealizada = interv;
     }
 
     public void ImprimirPago()

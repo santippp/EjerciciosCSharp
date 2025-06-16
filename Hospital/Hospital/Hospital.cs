@@ -57,4 +57,9 @@ public class Hospital
     {
         Pacientes.Add(nuevoPaciente);
     }
+
+    public Paciente BuscarPaciente(int dni)
+    {
+        return Pacientes.Find(p => p.DNI == dni);
+    }
 }
