@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JugadorCansado")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33a9a770ad921aa8ff002de37fb710654137cdde")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cba26676f62b498c935a832bc7c678ab88ba44c5")]
 [assembly: System.Reflection.AssemblyProductAttribute("JugadorCansado")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JugadorCansado")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
